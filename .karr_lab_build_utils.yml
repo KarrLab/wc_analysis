@@ -1,2 +1,5 @@
-- h1_hesc
-- mycoplasma_pneumoniae
+downstream_dependencies:
+  - h1_hesc
+  - mycoplasma_pneumoniae
+email_notifications:
+  - jonrkarr@gmail.com
