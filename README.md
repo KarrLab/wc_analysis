@@ -1,5 +1,5 @@
 [//]: # ( [![PyPI package](https://img.shields.io/pypi/v/wc_analysis.svg)](https://pypi.python.org/pypi/wc_analysis) )
-[![Documentation](https://readthedocs.org/projects/wc_analysis/badge/?version=latest)](http://wc_analysis.readthedocs.org)
+[![Documentation](https://img.shields.io/badge/docs-latest-green.svg)](http://docs.karrlab.org/wc_analysis)
 [![Test results](https://circleci.com/gh/KarrLab/wc_analysis.svg?style=shield)](https://circleci.com/gh/KarrLab/wc_analysis)
 [![Test coverage](https://coveralls.io/repos/github/KarrLab/wc_analysis/badge.svg)](https://coveralls.io/github/KarrLab/wc_analysis)
 [![Code analysis](https://api.codeclimate.com/v1/badges/fa022b6c68229ea4aef7/maintainability)](https://codeclimate.com/github/KarrLab/wc_analysis)
@@ -17,7 +17,7 @@ pip install git+https://github.com/KarrLab/wc_analysis.git#egg=wc_analysis
 ```
 
 ## Documentation
-Please see the [API documentation](http://wc_analysis.readthedocs.io).
+Please see the [API documentation](http://docs.karrlab.org/wc_analysis).
 
 ## License
 This package is released under the [MIT license](LICENSE).
