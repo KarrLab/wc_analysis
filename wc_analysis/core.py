@@ -85,7 +85,7 @@ class ModelAnalysis(Analysis):
         self.knowledge_base = knowledge_base
 
 
-class SimulationResultsAnalysis(Analysis):
+class SimulationAnalysis(Analysis):
     """ Analysis of a simulation result
 
     Attributes:
@@ -103,7 +103,7 @@ class SimulationResultsAnalysis(Analysis):
             out_path (:obj:`str`, optional): path to save analyses
             options (:obj:`dict`, optional): options
         """
-        super(SimulationResultsAnalysis, self).__init__(out_path=out_path, options=options)
+        super(SimulationAnalysis, self).__init__(out_path=out_path, options=options)
         self.sim_results_path = sim_results_path
         self.model = model
         self.knowledge_base = knowledge_base
@@ -171,7 +171,7 @@ class AnalysisRunner(object):
                                         model=self.model,
                                         out_path=out_path,
                                         options=options.get(analysis_cls.__name__, {}))
-            elif issubclass(analysis_cls, SimulationResultsAnalysis):
+            elif issubclass(analysis_cls, SimulationAnalysis):
                 analysis = analysis_cls(knowledge_base=self.knowledge_base,
                                         model=self.model,
                                         sim_results_path=self.sim_results_path,

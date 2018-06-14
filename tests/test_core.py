@@ -49,8 +49,8 @@ class Test(unittest.TestCase):
         test_analysis = TestAnalysis(model=None, knowledge_base=None)
         test_analysis.run()
 
-    def test_SimulationResultsAnalysis(self):
-        class TestAnalysis(core.SimulationResultsAnalysis):
+    def test_SimulationAnalysis(self):
+        class TestAnalysis(core.SimulationAnalysis):
             def run(self):
                 pass
 
@@ -70,7 +70,7 @@ class Test(unittest.TestCase):
             def run(self):
                 pass
 
-        class TestSimResultsAnalysis(core.SimulationResultsAnalysis):
+        class TestSimResultsAnalysis(core.SimulationAnalysis):
             def run(self):
                 pass
         runner = core.AnalysisRunner(None, None, None, analyses=[
@@ -90,7 +90,7 @@ class Test(unittest.TestCase):
             def run(self):
                 pass
 
-        class TestSimResultsAnalysis(core.SimulationResultsAnalysis):
+        class TestSimResultsAnalysis(core.SimulationAnalysis):
             def run(self):
                 pass
         runner = core.AnalysisRunner(None, None, None, analyses=[
