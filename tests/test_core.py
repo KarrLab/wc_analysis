@@ -58,7 +58,7 @@ class Test(unittest.TestCase):
         test_analysis.run()
 
     def test_AnalysisRunner_constructor(self):
-        runner = core.AnalysisRunner()
+        runner = core.AnalysisRunner(None, None, None)
         self.assertEqual(runner.analyses, ())
 
     def test_AnalysisRunner_without_saving(self):
@@ -73,7 +73,7 @@ class Test(unittest.TestCase):
         class TestSimResultsAnalysis(core.SimulationResultsAnalysis):
             def run(self):
                 pass
-        runner = core.AnalysisRunner(analyses=[
+        runner = core.AnalysisRunner(None, None, None, analyses=[
             TestKbAnalysis, TestModelAnalysis, TestSimResultsAnalysis,
         ])
         runner.run()
@@ -93,7 +93,7 @@ class Test(unittest.TestCase):
         class TestSimResultsAnalysis(core.SimulationResultsAnalysis):
             def run(self):
                 pass
-        runner = core.AnalysisRunner(analyses=[
+        runner = core.AnalysisRunner(None, None, None, analyses=[
             TestKbAnalysis, TestModelAnalysis, TestSimResultsAnalysis,
         ], out_path=self.dir)
         runner.run()
@@ -105,6 +105,6 @@ class Test(unittest.TestCase):
         class TestAnalysis(core.Analysis):
             def run(self):
                 pass
-        runner = core.AnalysisRunner(analyses=[TestAnalysis], out_path=self.dir)
+        runner = core.AnalysisRunner(None, None, None, analyses=[TestAnalysis], out_path=self.dir)
         with self.assertRaisesRegexp(ValueError, 'Unsupported analysis of '):
             runner.run()
