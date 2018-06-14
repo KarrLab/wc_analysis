@@ -6,7 +6,9 @@
 :License: MIT
 """
 
+from matplotlib import pyplot
 import abc
+import matplotlib
 import os
 import six
 import wc_kb.core
@@ -44,6 +46,32 @@ class Analysis(six.with_metaclass(abc.ABCMeta, object)):
     def run(self):
         """ Run the analysis """
         pass  # pragma: no cover
+
+    def create_fig(self, rows=1, cols=1):
+        """ Create a figure composed of a grid of subfigures
+
+        Args:
+            rows (:obj:`int`, optional): number of rows of subfigures
+            cols (:obj:`int`, optional): number of columns of subfigures
+
+        Returns:
+            :obj:`matplotlib.figure.Figure`: figure
+            :obj:`matplotlib.axes.Axes`: axes
+        """
+        return pyplot.subplots(nrows=rows, ncols=cols)
+
+    def show_or_save_fig(self, fig, filename=None):
+        """ Show or save a figure 
+
+        Args:
+            fig (:obj:`matplotlib.figure.Figure`): figure
+            filename (:obj:`str`, optional): filename to save figure
+        """
+        if self.out_path:
+            fig.savefig(os.path.join(self.out_path, filename), transparent=True, bbox_inches='tight')
+            pyplot.close(fig)
+        else:
+            fig.show()  # pragma: no cover
 
 
 class KnowledgeBaseAnalysis(Analysis):

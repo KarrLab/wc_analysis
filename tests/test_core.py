@@ -31,7 +31,10 @@ class Test(unittest.TestCase):
         out_path = os.path.join(self.dir, 'test_analysis')
         test_analysis = TestAnalysis(out_path=out_path)
         test_analysis.run()
+        fig, _ = test_analysis.create_fig()
+        test_analysis.show_or_save_fig(fig, 'fig.pdf')
         self.assertTrue(os.path.isdir(out_path))
+        self.assertTrue(os.path.isfile(os.path.join(out_path, 'fig.pdf')))
 
     def test_KnowledgeBaseAnalysis(self):
         class TestAnalysis(core.KnowledgeBaseAnalysis):
