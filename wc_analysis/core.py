@@ -95,46 +95,46 @@ class KnowledgeBaseAnalysis(Analysis):
 class ModelAnalysis(Analysis):
     """ Analysis of a model
 
-    Attributes:
-        model (:obj:`wc_lang.core.Model`): model
+    Attributes:        
         knowledge_base (:obj:`wc_kb.core.KnowledgeBase`): knowledge base
+        model (:obj:`wc_lang.core.Model`): model
     """
 
-    def __init__(self, model, knowledge_base, out_path=None, options=None):
+    def __init__(self, knowledge_base, model, out_path=None, options=None):
         """
-        Args:
-            model (:obj:`wc_lang.core.Model`): model
+        Args:            
             knowledge_base (:obj:`wc_kb.core.KnowledgeBase`): knowledge base
+            model (:obj:`wc_lang.core.Model`): model
             out_path (:obj:`str`, optional): path to save analyses
             options (:obj:`dict`, optional): options
         """
         super(ModelAnalysis, self).__init__(out_path=out_path, options=options)
-        self.model = model
         self.knowledge_base = knowledge_base
+        self.model = model
 
 
 class SimulationAnalysis(Analysis):
     """ Analysis of a simulation result
 
     Attributes:
-        sim_results_path (:obj:`str`): path to simulation results
-        model (:obj:`wc_lang.core.Model`): model
         knowledge_base (:obj:`wc_kb.core.KnowledgeBase`): knowledge base
+        model (:obj:`wc_lang.core.Model`): model
+        sim_results_path (:obj:`str`): path to simulation results
     """
 
-    def __init__(self, sim_results_path, model, knowledge_base, out_path=None, options=None):
+    def __init__(self, knowledge_base, model, sim_results_path, out_path=None, options=None):
         """
-        Args:
-            sim_results_path (:obj:`str`): path to simulation results
-            model (:obj:`wc_lang.core.Model`): model
+        Args:            
             knowledge_base (:obj:`wc_kb.core.KnowledgeBase`): knowledge base
+            model (:obj:`wc_lang.core.Model`): model
+            sim_results_path (:obj:`str`): path to simulation results
             out_path (:obj:`str`, optional): path to save analyses
             options (:obj:`dict`, optional): options
         """
         super(SimulationAnalysis, self).__init__(out_path=out_path, options=options)
-        self.sim_results_path = sim_results_path
-        self.model = model
         self.knowledge_base = knowledge_base
+        self.model = model
+        self.sim_results_path = sim_results_path
 
 
 class AnalysisRunner(object):
