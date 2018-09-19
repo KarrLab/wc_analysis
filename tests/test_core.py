@@ -21,7 +21,7 @@ class Test(unittest.TestCase):
         shutil.rmtree(self.dir)
 
     def test_Analysis(self):
-        with self.assertRaisesRegexp(TypeError, 'Can\'t instantiate abstract class'):
+        with self.assertRaisesRegex(TypeError, 'Can\'t instantiate abstract class'):
             core.Analysis()
 
         class TestAnalysis(core.Analysis):
@@ -109,5 +109,5 @@ class Test(unittest.TestCase):
             def run(self):
                 pass
         runner = core.AnalysisRunner(None, None, None, analyses=[TestAnalysis], out_path=self.dir)
-        with self.assertRaisesRegexp(ValueError, 'Unsupported analysis of '):
+        with self.assertRaisesRegex(ValueError, 'Unsupported analysis of '):
             runner.run()
