@@ -61,7 +61,7 @@ class Analysis(six.with_metaclass(abc.ABCMeta, object)):
         return pyplot.subplots(nrows=rows, ncols=cols)
 
     def show_or_save_fig(self, fig, filename=None):
-        """ Show or save a figure 
+        """ Show or save a figure
 
         Args:
             fig (:obj:`matplotlib.figure.Figure`): figure
@@ -95,46 +95,46 @@ class KnowledgeBaseAnalysis(Analysis):
 class ModelAnalysis(Analysis):
     """ Analysis of a model
 
-    Attributes:        
-        knowledge_base (:obj:`wc_kb.core.KnowledgeBase`): knowledge base
+    Attributes:
         model (:obj:`wc_lang.core.Model`): model
+        knowledge_base (:obj:`wc_kb.core.KnowledgeBase`): knowledge base
     """
 
-    def __init__(self, knowledge_base, model, out_path=None, options=None):
+    def __init__(self, model, knowledge_base=None, out_path=None, options=None):
         """
-        Args:            
-            knowledge_base (:obj:`wc_kb.core.KnowledgeBase`): knowledge base
+        Args:
             model (:obj:`wc_lang.core.Model`): model
+            knowledge_base (:obj:`wc_kb.core.KnowledgeBase`, optional): knowledge base
             out_path (:obj:`str`, optional): path to save analyses
             options (:obj:`dict`, optional): options
         """
         super(ModelAnalysis, self).__init__(out_path=out_path, options=options)
-        self.knowledge_base = knowledge_base
         self.model = model
+        self.knowledge_base = knowledge_base
 
 
 class SimulationAnalysis(Analysis):
     """ Analysis of a simulation result
 
     Attributes:
-        knowledge_base (:obj:`wc_kb.core.KnowledgeBase`): knowledge base
-        model (:obj:`wc_lang.core.Model`): model
         sim_results_path (:obj:`str`): path to simulation results
+        model (:obj:`wc_lang.core.Model`): model
+        knowledge_base (:obj:`wc_kb.core.KnowledgeBase`): knowledge base
     """
 
-    def __init__(self, knowledge_base, model, sim_results_path, out_path=None, options=None):
+    def __init__(self, sim_results_path, model=None, knowledge_base=None, out_path=None, options=None):
         """
-        Args:            
-            knowledge_base (:obj:`wc_kb.core.KnowledgeBase`): knowledge base
-            model (:obj:`wc_lang.core.Model`): model
+        Args:
             sim_results_path (:obj:`str`): path to simulation results
+            model (:obj:`wc_lang.core.Model`, optional): model
+            knowledge_base (:obj:`wc_kb.core.KnowledgeBase`, optional): knowledge base
             out_path (:obj:`str`, optional): path to save analyses
             options (:obj:`dict`, optional): options
         """
         super(SimulationAnalysis, self).__init__(out_path=out_path, options=options)
-        self.knowledge_base = knowledge_base
-        self.model = model
         self.sim_results_path = sim_results_path
+        self.model = model
+        self.knowledge_base = knowledge_base
 
 
 class AnalysisRunner(object):
@@ -151,12 +151,13 @@ class AnalysisRunner(object):
 
     DEFAULT_ANALYSES = ()
 
-    def __init__(self, knowledge_base, model, sim_results_path, analyses=None, out_path=None, options=None):
+    def __init__(self, knowledge_base=None, model=None, sim_results_path=None,
+        analyses=None, out_path=None, options=None):
         """
         Args:
-            knowledge_base (:obj:`wc_kb.core.KnowledgeBase`): knowledge base
-            model (:obj:`wc_lang.core.Model`): model
-            sim_results_path (:obj:`str`): path to simulation results
+            knowledge_base (:obj:`wc_kb.core.KnowledgeBase`, optional): knowledge base
+            model (:obj:`wc_lang.core.Model`, optional): model
+            sim_results_path (:obj:`str`, optional): path to simulation results
             analyses (:obj:`list` of :obj:`Analysis`, optional): analyses to run
             out_path (:obj:`str`, optional): path to save analyses
             options (:obj:`dict`, optional): options

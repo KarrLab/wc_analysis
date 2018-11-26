@@ -6,3 +6,6 @@ with open(pkg_resources.resource_filename('wc_analysis', 'VERSION'), 'r') as fil
 
 # API
 from .core import Analysis, KnowledgeBaseAnalysis, ModelAnalysis, SimulationAnalysis, AnalysisRunner
+from . import kb
+from . import model
+from . import sim
