@@ -11,6 +11,8 @@ from wc_analysis.core import ModelAnalysis
 import networkx
 import wc_kb
 import wc_lang
+import wc_lang.config
+
 
 class FbaModelAnalysis(ModelAnalysis):
     """ Statically analyze an FBA submodel
@@ -31,7 +33,7 @@ class FbaModelAnalysis(ModelAnalysis):
             options (:obj:`dict`, optional): options
         """
         super(FbaModelAnalysis, self).__init__(model, knowledge_base=knowledge_base,
-            out_path=out_path, options=options)
+                                               out_path=out_path, options=options)
 
         for submodel in self.model.submodels:
             if submodel.algorithm != wc_lang.SubmodelAlgorithm.dfba:
@@ -203,9 +205,10 @@ class FbaModelAnalysis(ModelAnalysis):
             extracellular species, as returned by `unbounded_paths`.
         """
         # todo: symmetrically, report reactions not on any path from ex species to obj fun components
+        config = wc_lang.config.get_config()['wc_lang']
         digraph = self.get_digraph(submodel)
         obj_fn_species = submodel.dfba_obj.get_products()
-        ex_compartment = submodel.model.compartments.get_one(id=wc_lang.core.EXTRACELLULAR_COMPARTMENT_ID)
+        ex_compartment = submodel.model.compartments.get_one(id=config['EXTRACELLULAR_COMPARTMENT_ID'])
         ex_species = filter(lambda species: species.compartment == ex_compartment,
                             submodel.get_species())
         all_unbounded_paths = dict()
@@ -255,7 +258,7 @@ class FbaModelAnalysis(ModelAnalysis):
                 bounded = False
                 for i in range(1, len(path), 2):
                     rxn = path[i]
-                    if rxn.max_flux < min_non_finite_ub:
+                    if rxn.flux_max < min_non_finite_ub:
                         bounded = True
                         break
                 if not bounded:

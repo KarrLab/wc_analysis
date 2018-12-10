@@ -12,11 +12,12 @@ import wc_lang
 import wc_lang.io
 import wc_analysis.model.fba
 
+
 class FbaModelAnalysisTestCase(unittest.TestCase):
     MODEL_FILENAME = os.path.join(os.path.dirname(__file__), '..', 'fixtures', 'test_model.xlsx')
     RNX_ID_PREFIX = 'rxn'
     SPECIES_ID_PREFIX = 'spec_type'
-    default_max_flux = 10000
+    default_flux_max = 10000
 
     def rxn_id(self, n):
         return "{}_{}".format(self.RNX_ID_PREFIX, n)
@@ -51,10 +52,10 @@ class FbaModelAnalysisTestCase(unittest.TestCase):
         reversible = True
         if 'reversible' in kwargs:
             reversible = kwargs['reversible']
-        max_flux = self.default_max_flux
-        if 'max_flux' in kwargs:
-            max_flux = kwargs['max_flux']
-        rxn = submodel.reactions.create(id=self.next_id(), reversible=reversible, max_flux=max_flux)
+        flux_max = self.default_flux_max
+        if 'flux_max' in kwargs:
+            flux_max = kwargs['flux_max']
+        rxn = submodel.reactions.create(id=self.next_id(), reversible=reversible, flux_max=flux_max)
         rxn.participants.create(species=reactant, coefficient=-1)
         rxn.participants.create(species=product, coefficient=1)
 
@@ -63,7 +64,7 @@ class FbaModelAnalysisTestCase(unittest.TestCase):
         # first delete all Reactions
         submodel.reactions = []
         if network_type == 'ring':
-            # kwargs options: num_rxn, reversible, max_flux
+            # kwargs options: num_rxn, reversible, flux_max
             species = self.species
             if len(species) < kwargs['num_rxn']:
                 self.fail("not enough species, len(species) < kwargs['num_rxn']")
@@ -84,7 +85,7 @@ class FbaModelAnalysisTestCase(unittest.TestCase):
         first_specie = self.species[0]
         dead_end_species = set([first_specie])
         inactive_reactions = self.model_analysis.get_inactive_rxns(self.dfba_submodel,
-                                                                       (set(), dead_end_species))
+                                                                   (set(), dead_end_species))
         self.assertEqual(len(inactive_reactions), 2)
         self.assertIn(self.dfba_submodel.reactions[0], inactive_reactions)
         self.assertIn(self.dfba_submodel.reactions[-1], inactive_reactions)
@@ -121,7 +122,7 @@ class FbaModelAnalysisTestCase(unittest.TestCase):
         #   species_not_consumed = first reaction's reactant
         #   species_not_produced = first reaction's product
         species_not_consumed, species_not_produced = model_analysis.get_dead_end_species(self.dfba_submodel,
-                                                                                    set([self.dfba_submodel.reactions[0]]))
+                                                                                         set([self.dfba_submodel.reactions[0]]))
         self.assertEqual(species_not_consumed.pop(), reactant)
         self.assertEqual(species_not_produced.pop(), product)
         self.assertFalse(species_not_consumed)
@@ -207,7 +208,7 @@ class FbaModelAnalysisTestCase(unittest.TestCase):
         # irrreversible reactions
         # unbounded network
         self.create_reaction_network(self.dfba_submodel, 'ring', **{'num_rxn': num_rxn, 'reversible': False,
-                                                                    'max_flux': float('inf')})
+                                                                    'flux_max': float('inf')})
         path_len = 2*num_rxn-1
         g = self.model_analysis.get_digraph(self.dfba_submodel)
         paths = self.model_analysis.unbounded_paths(g, self.species[0], [self.species[num_rxn-1]])
@@ -218,13 +219,13 @@ class FbaModelAnalysisTestCase(unittest.TestCase):
         self.create_reaction_network(self.dfba_submodel, 'ring', **{'num_rxn': num_rxn, 'reversible': False})
         g = self.model_analysis.get_digraph(self.dfba_submodel)
         paths = self.model_analysis.unbounded_paths(g, self.species[0],
-                                                   [self.species[num_rxn-1]], min_non_finite_ub=self.default_max_flux+1)
+                                                    [self.species[num_rxn-1]], min_non_finite_ub=self.default_flux_max+1)
         self.assertEqual(len(paths), 0)
 
         # reversible reactions, paths on both sides of ring
         # unbounded network
         self.create_reaction_network(self.dfba_submodel, 'ring', **{'num_rxn': num_rxn, 'reversible': True,
-                                                                    'max_flux': float('inf')})
+                                                                    'flux_max': float('inf')})
         g = self.model_analysis.get_digraph(self.dfba_submodel)
         paths = self.model_analysis.unbounded_paths(g, self.species[0], [self.species[num_rxn//2]])
         self.assertEqual(len(paths), 2)
@@ -235,7 +236,7 @@ class FbaModelAnalysisTestCase(unittest.TestCase):
         self.create_reaction_network(self.dfba_submodel, 'ring', **{'num_rxn': num_rxn, 'reversible': True})
         g = self.model_analysis.get_digraph(self.dfba_submodel)
         paths = self.model_analysis.unbounded_paths(g, self.species[0], [self.species[num_rxn//2]],
-                                                   min_non_finite_ub=self.default_max_flux+1)
+                                                    min_non_finite_ub=self.default_flux_max+1)
         self.assertEqual(len(paths), 0)
 
         # test exceptions
@@ -247,20 +248,17 @@ class FbaModelAnalysisTestCase(unittest.TestCase):
 
     def test_path_bounds_analysis(self):
         # read a wc model
-        wc_lang.Submodel.objects.reset()
-        wc_lang.Reaction.objects.reset()
-        wc_lang.BiomassReaction.objects.reset()
         self.model = wc_lang.io.Reader().run(self.MODEL_FILENAME)
-        self.dfba_submodel = wc_lang.Submodel.objects.get_one(id='submodel_1')
+        self.dfba_submodel = self.model.submodels.get_one(id='submodel_1')
         self.model_analysis = wc_analysis.model.fba.FbaModelAnalysis(self.model)
 
         for rxn in self.dfba_submodel.reactions:
-            rxn.max_flux = 0
+            rxn.flux_max = 0
         paths = self.model_analysis.path_bounds_analysis(self.dfba_submodel)
         for k in paths.keys():
             self.assertEqual(paths[k], [])
 
         for rxn in self.dfba_submodel.reactions:
-            rxn.max_flux = float('inf')
+            rxn.flux_max = float('inf')
         paths = self.model_analysis.path_bounds_analysis(self.dfba_submodel)
         self.assertEqual(len(paths['specie_1[e]']), 2)
