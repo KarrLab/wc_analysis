@@ -248,7 +248,7 @@ class FbaModelAnalysisTestCase(unittest.TestCase):
 
     def test_path_bounds_analysis(self):
         # read a wc model
-        self.model = wc_lang.io.Reader().run(self.MODEL_FILENAME)
+        self.model = wc_lang.io.Reader().run(self.MODEL_FILENAME)[wc_lang.Model][0]
         self.dfba_submodel = self.model.submodels.get_one(id='submodel_1')
         self.model_analysis = wc_analysis.model.fba.FbaModelAnalysis(self.model)
 
