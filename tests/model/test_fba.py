@@ -38,10 +38,11 @@ class FbaModelAnalysisTestCase(unittest.TestCase):
         for i in range(1, self.num_species+1):
             spec_type = self.model.species_types.create(id=self.sp_id(i),
                                                         type=wc_lang.SpeciesTypeType.metabolite)
-            self.species.append(wc_lang.Species(
-                id=wc_lang.Species.gen_id(spec_type.id, comp.id),
+            species = wc_lang.Species(
                 species_type=spec_type,
-                compartment=comp))
+                compartment=comp)
+            species.id = species.gen_id()
+            self.species.append(species)
         self.dfba_submodel = self.model.submodels.create(
             id='metabolism', algorithm=wc_lang.SubmodelAlgorithm.dfba)
 
