@@ -6,6 +6,7 @@
 :Copyright: 2018, Karr Lab
 :License: MIT
 """
+from wc_utils.util.ontology import wcm_ontology
 import os
 import unittest
 import wc_lang
@@ -37,14 +38,15 @@ class FbaModelAnalysisTestCase(unittest.TestCase):
         self.num_species = 20
         for i in range(1, self.num_species+1):
             spec_type = self.model.species_types.create(id=self.sp_id(i),
-                                                        type=wc_lang.SpeciesTypeType.metabolite)
+                                                        type=wcm_ontology['WCM:metabolite']) # metabolite
             species = wc_lang.Species(
                 species_type=spec_type,
                 compartment=comp)
             species.id = species.gen_id()
             self.species.append(species)
         self.dfba_submodel = self.model.submodels.create(
-            id='metabolism', algorithm=wc_lang.SubmodelAlgorithm.dfba)
+            id='metabolism',
+            framework=wcm_ontology['WCM:dynamic_flux_balance_analysis'])
 
         self.id_idx = 0
         self.model_analysis = wc_analysis.model.fba.FbaModelAnalysis(self.model)

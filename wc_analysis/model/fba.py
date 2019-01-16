@@ -8,6 +8,7 @@
 """
 
 from wc_analysis.core import ModelAnalysis
+from wc_utils.util.ontology import wcm_ontology
 import networkx
 import wc_kb
 import wc_lang
@@ -36,7 +37,7 @@ class FbaModelAnalysis(ModelAnalysis):
                                                out_path=out_path, options=options)
 
         for submodel in self.model.submodels:
-            if submodel.algorithm != wc_lang.SubmodelAlgorithm.dfba:
+            if submodel.framework != wcm_ontology['WCM:dynamic_flux_balance_analysis']:
                 self.get_rxn_gaps(submodel)
                 self.path_bounds_analysis(submodel)
 
