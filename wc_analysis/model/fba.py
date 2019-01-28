@@ -97,7 +97,7 @@ class FbaModelAnalysis(ModelAnalysis):
                 * :obj:`set` of :obj:`wc_lang.Species`: the species that are not consumed
                 * :obj:`set` of :obj:`wc_lang.Species`: the species that are not produced
         """
-        species = submodel.get_species()
+        species = submodel.get_children(kind='submodel', __type=wc_lang.Species)
         species_not_consumed = set(species)
         species_not_produced = set(species)
         for rxn in submodel.reactions:
@@ -163,7 +163,7 @@ class FbaModelAnalysis(ModelAnalysis):
         digraph = networkx.DiGraph()
 
         # make network of obj_model.Model instances
-        for specie in submodel.get_species():
+        for specie in submodel.get_children(kind='submodel', __type=wc_lang.Species):
             digraph.add_node(specie)
         for rxn in submodel.reactions:
             digraph.add_node(rxn)
@@ -211,7 +211,7 @@ class FbaModelAnalysis(ModelAnalysis):
         obj_fn_species = submodel.dfba_obj.get_products()
         ex_compartment = submodel.model.compartments.get_one(id=config['EXTRACELLULAR_COMPARTMENT_ID'])
         ex_species = filter(lambda species: species.compartment == ex_compartment,
-                            submodel.get_species())
+                            submodel.get_children(kind='submodel', __type=wc_lang.Species))
         all_unbounded_paths = dict()
         for ex_specie in ex_species:
             paths = self.unbounded_paths(digraph, ex_specie, obj_fn_species)
