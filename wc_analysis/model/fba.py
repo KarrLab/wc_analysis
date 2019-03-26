@@ -8,7 +8,7 @@
 """
 
 from wc_analysis.core import ModelAnalysis
-from wc_utils.util.ontology import wcm_ontology
+from wc_onto import onto
 import networkx
 import wc_kb
 import wc_lang
@@ -37,7 +37,7 @@ class FbaModelAnalysis(ModelAnalysis):
                                                out_path=out_path, options=options)
 
         for submodel in self.model.submodels:
-            if submodel.framework != wcm_ontology['WCM:dynamic_flux_balance_analysis']:
+            if submodel.framework != onto['WC:dynamic_flux_balance_analysis']:
                 self.get_rxn_gaps(submodel)
                 self.path_bounds_analysis(submodel)
 
@@ -148,7 +148,7 @@ class FbaModelAnalysis(ModelAnalysis):
     def get_digraph(self, submodel):
         """ Create a NetworkX network representing the reaction network in `submodel`
 
-        To leverage the algorithms in NetworkX, map a reaction network onto a NetworkX
+        To leverage the algorithms in NetworkX, map a reaction network on to a NetworkX
         directed graph.
         The digraph is bipartite, with `Reaction` and `Species` nodes. A reaction is represented
         a Reaction node, with an edge from each reactant Species node to the Reaction node, and
