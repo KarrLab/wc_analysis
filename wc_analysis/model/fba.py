@@ -259,7 +259,7 @@ class FbaModelAnalysis(ModelAnalysis):
                 bounded = False
                 for i in range(1, len(path), 2):
                     rxn = path[i]
-                    if rxn.flux_max < min_non_finite_ub:
+                    if rxn.flux_bounds and rxn.flux_bounds.max < min_non_finite_ub:
                         bounded = True
                         break
                 if not bounded:

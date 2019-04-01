@@ -55,10 +55,19 @@ class FbaModelAnalysisTestCase(unittest.TestCase):
         reversible = True
         if 'reversible' in kwargs:
             reversible = kwargs['reversible']
+        
         flux_max = self.default_flux_max
         if 'flux_max' in kwargs:
             flux_max = kwargs['flux_max']
-        rxn = submodel.reactions.create(id=self.next_id(), reversible=reversible, flux_max=flux_max)
+
+        flux_bounds = wc_lang.FluxBounds(max=flux_max)
+        for rxn in submodel.model.reactions:
+            if rxn.flux_bounds and rxn.flux_bounds.serialize() == flux_bounds.serialize():
+                flux_bounds = rxn.flux_bounds
+                break
+
+        rxn = submodel.reactions.create(id=self.next_id(), reversible=reversible, 
+            flux_bounds=flux_bounds)
         rxn.participants.create(species=reactant, coefficient=-1)
         rxn.participants.create(species=product, coefficient=1)
 
@@ -256,12 +265,24 @@ class FbaModelAnalysisTestCase(unittest.TestCase):
         self.model_analysis = wc_analysis.model.fba.FbaModelAnalysis(self.model)
 
         for rxn in self.dfba_submodel.reactions:
-            rxn.flux_max = 0
+            if rxn.flux_bounds:
+                flux_bounds = wc_lang.FluxBounds(min=rxn.flux_bounds.min, max=0, units=rxn.flux_bounds.units)
+                rxn.flux_bounds = None
+            else:
+                flux_bounds = wc_lang.FluxBounds(max=0)
+            
+            for rxn_2 in self.model.reactions:
+                if rxn_2.flux_bounds and rxn_2.flux_bounds.serialize() == flux_bounds.serialize():
+                    flux_bounds = rxn_2.flux_bounds
+                    break
+
+            rxn.flux_bounds = flux_bounds            
+
         paths = self.model_analysis.path_bounds_analysis(self.dfba_submodel)
         for k in paths.keys():
             self.assertEqual(paths[k], [])
 
         for rxn in self.dfba_submodel.reactions:
-            rxn.flux_max = float('inf')
+            rxn.flux_bounds.max = float('inf')
         paths = self.model_analysis.path_bounds_analysis(self.dfba_submodel)
         self.assertEqual(len(paths['specie_1[e]']), 2)
