@@ -65,8 +65,8 @@ class FbaModelAnalysis(ModelAnalysis):
             submodel (:obj:`wc_lang.Submodel`): dFBA submodel
 
         Returns:
-            * :obj:`set` of :obj:`wc_lang.Species`: `Species` not in the minimal reaction network
-            * :obj:`set` of :obj:`wc_lang.Reaction`: `Reaction`s not in the minimal reaction network
+            * :obj:`set` of :obj:`wc_lang.Species`: :obj:`wc_lang.Species` not in the minimal reaction network
+            * :obj:`set` of :obj:`wc_lang.Reaction`: :obj:`wc_lang.Reaction`\ s not in the minimal reaction network
         """
         all_dead_end_species = self.get_dead_end_species(submodel, set())
         delta_dead_end_species = all_dead_end_species
