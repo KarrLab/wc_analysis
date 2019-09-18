@@ -162,7 +162,7 @@ class FbaModelAnalysis(ModelAnalysis):
         """
         digraph = networkx.DiGraph()
 
-        # make network of obj_model.Model instances
+        # make network of obj_tables.Model instances
         for specie in submodel.get_children(kind='submodel', __type=wc_lang.Species):
             digraph.add_node(specie)
         for rxn in submodel.reactions:
