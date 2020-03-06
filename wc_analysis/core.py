@@ -10,12 +10,11 @@ from matplotlib import pyplot
 import abc
 import matplotlib
 import os
-import six
 import wc_kb.core
 import wc_lang.core
 
 
-class Analysis(six.with_metaclass(abc.ABCMeta, object)):
+class Analysis(object, metaclass=abc.ABCMeta):
     """ An analysis of a knowledge base, model, or simulation results
 
     Attributes:

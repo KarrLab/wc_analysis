@@ -1,6 +1,5 @@
 matplotlib
 setuptools
-six
 wc_kb
 wc_lang
 wc_onto
