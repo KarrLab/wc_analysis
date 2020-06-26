@@ -1,5 +1,5 @@
 matplotlib
-setuptools
+networkx
 wc_kb
 wc_lang
 wc_onto
